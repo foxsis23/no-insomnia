@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { PRODUCTS } from '@/data/products'
+import { createSupabaseAdminClient } from '@/lib/supabase/admin'
+import { OrderRow, ProductRow } from '@/types'
 
 interface RouteParams {
   params: Promise<{ token: string }>
@@ -9,22 +10,41 @@ export async function GET(req: NextRequest, { params }: RouteParams): Promise<Ne
   try {
     const { token } = await params
 
-    // In production: look up order by access_token in DB
-    // Stub: return mock order
-    if (!token || !token.startsWith('token_')) {
+    if (!token) {
       return NextResponse.json({ error: 'Order not found' }, { status: 404 })
     }
 
-    const mockOrder = {
-      id: `mock_order_${token}`,
-      accessToken: token,
-      productId: 'sleep_reason',
-      amount: PRODUCTS.sleep_reason.price,
-      status: 'paid',
-      createdAt: new Date().toISOString()
+    const supabase = createSupabaseAdminClient()
+
+    const { data: order, error: orderError } = await supabase
+      .from('orders')
+      .select('*')
+      .eq('access_token', token)
+      .eq('status', 'paid')
+      .single<OrderRow>()
+
+    if (orderError || !order) {
+      return NextResponse.json({ error: 'Order not found' }, { status: 404 })
     }
 
-    return NextResponse.json(mockOrder)
+    // Fetch product content_url
+    const { data: product } = await supabase
+      .from('products')
+      .select('content_url, name, type')
+      .eq('id', order.product_id)
+      .single<Pick<ProductRow, 'content_url' | 'name' | 'type'>>()
+
+    return NextResponse.json({
+      id: order.id,
+      accessToken: order.access_token,
+      productId: order.product_id,
+      amount: order.amount,
+      status: order.status,
+      createdAt: order.created_at,
+      paidAt: order.paid_at,
+      contentUrl: product?.content_url || null,
+      productType: product?.type || null
+    })
   } catch (error) {
     console.error('[orders/token] error:', error)
     return NextResponse.json({ error: 'Internal error' }, { status: 500 })

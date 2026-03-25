@@ -12,11 +12,33 @@ interface SuccessPageProps {
   searchParams: Promise<{ token?: string; product?: string }>
 }
 
+interface OrderData {
+  productId: string
+  contentUrl: string | null
+  productType: string | null
+}
+
+async function getOrderData(token: string): Promise<OrderData | null> {
+  try {
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+    const res = await fetch(`${baseUrl}/api/orders/${token}`, { cache: 'no-store' })
+    if (!res.ok) return null
+    return res.json()
+  } catch {
+    return null
+  }
+}
+
 export default async function SuccessPage({ searchParams }: SuccessPageProps) {
   const params = await searchParams
   const token = params.token
   const productId = params.product || 'sleep_reason'
   const product = PRODUCTS[productId]
+
+  // Fetch real order data if token provided
+  const orderData = token ? await getOrderData(token) : null
+  const contentUrl = orderData?.contentUrl || null
+  const productType = orderData?.productType || product?.type || 'text'
 
   return (
     <>
@@ -30,9 +52,6 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
             <p className="text-slate-600 text-sm">
               Дякуємо за покупку. Ваш матеріал доступний нижче.
             </p>
-            {token && (
-              <p className="text-xs text-slate-400 mt-2">Токен доступу: {token}</p>
-            )}
           </div>
 
           {/* Product content */}
@@ -46,21 +65,25 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
               </div>
               <p className="text-slate-600 text-sm leading-relaxed mb-6">{product.description}</p>
 
-              <div className="bg-slate-50 rounded-xl p-6 text-sm text-slate-600 leading-relaxed">
-                <p className="font-medium text-slate-900 mb-3">Ваш матеріал готовий</p>
-                <p className="mb-3">
-                  Це демо-версія. Реальний контент буде доступний після повної інтеграції.
-                  Ви можете зберегти цю сторінку або надіслати на email.
-                </p>
-                <div className="flex gap-3 mt-4">
-                  <Link
-                    href="https://t.me/bezsonnya_net"
-                    target="_blank"
-                    className="bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
-                  >
-                    Telegram-підтримка
-                  </Link>
-                </div>
+              <div className="bg-slate-50 rounded-xl p-6">
+                {contentUrl ? (
+                  <ContentBlock contentUrl={contentUrl} type={productType} />
+                ) : (
+                  <div className="text-sm text-slate-600">
+                    <p className="font-medium text-slate-900 mb-3">Ваш матеріал готовий</p>
+                    <p className="mb-4 leading-relaxed">
+                      Контент буде доступний після додавання посилання адміністратором.
+                      Зверніться до підтримки у Telegram.
+                    </p>
+                    <Link
+                      href="https://t.me/bezsonnya_net"
+                      target="_blank"
+                      className="inline-block bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+                    >
+                      Telegram-підтримка
+                    </Link>
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -95,5 +118,47 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
         </div>
       </main>
     </>
+  )
+}
+
+function ContentBlock({ contentUrl, type }: { contentUrl: string; type: string }) {
+  if (type === 'audio') {
+    return (
+      <div>
+        <p className="font-medium text-slate-900 mb-3 text-sm">Ваше аудіо готове</p>
+        <audio controls className="w-full rounded-lg" src={contentUrl}>
+          Ваш браузер не підтримує аудіо.
+        </audio>
+      </div>
+    )
+  }
+
+  if (type === 'video') {
+    return (
+      <div>
+        <p className="font-medium text-slate-900 mb-3 text-sm">Ваш курс готовий</p>
+        <Link
+          href={contentUrl}
+          target="_blank"
+          className="inline-block bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors"
+        >
+          Відкрити курс →
+        </Link>
+      </div>
+    )
+  }
+
+  // text
+  return (
+    <div>
+      <p className="font-medium text-slate-900 mb-3 text-sm">Ваш матеріал готовий</p>
+      <Link
+        href={contentUrl}
+        target="_blank"
+        className="inline-block bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-medium px-5 py-2.5 rounded-lg transition-colors"
+      >
+        Відкрити матеріал →
+      </Link>
+    </div>
   )
 }

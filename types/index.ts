@@ -81,3 +81,39 @@ export interface CreateOrderResponse {
   formData: PaymentFormData
   paymentUrl: string
 }
+
+// DB row types (snake_case from Supabase)
+export interface OrderRow {
+  id: string
+  order_id: string
+  product_id: string
+  amount: number
+  status: 'pending' | 'paid' | 'failed'
+  email: string | null
+  result_type: string | null
+  access_token: string
+  wayforpay_reference: string | null
+  created_at: string
+  paid_at: string | null
+}
+
+export interface TestResultRow {
+  id: string
+  session_id: string
+  result_type: string
+  answers: unknown
+  created_at: string
+}
+
+export interface ProductRow {
+  id: string
+  name: string
+  description: string | null
+  price: number
+  type: 'text' | 'audio' | 'video'
+  tag: string | null
+  content_url: string | null
+  active: boolean
+  created_at: string
+  updated_at: string
+}

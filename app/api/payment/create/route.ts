@@ -1,13 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { createHmac } from 'crypto'
 import { CreateOrderRequest, CreateOrderResponse, PaymentFormData } from '@/types'
 import { PRODUCTS } from '@/data/products'
+import { createSupabaseAdminClient } from '@/lib/supabase/admin'
 
 function generateOrderId(): string {
   return `order_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`
 }
 
 function generateAccessToken(): string {
-  return `token_${Date.now()}_${Math.random().toString(36).slice(2, 16)}`
+  return `tok_${Date.now()}_${Math.random().toString(36).slice(2, 16)}`
+}
+
+function generateHmacSignature(secretKey: string, ...fields: string[]): string {
+  return createHmac('md5', secretKey).update(fields.join(';')).digest('hex')
 }
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
@@ -29,8 +35,6 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const serviceUrl = `${merchantDomainName}/api/payment/callback`
     const returnUrl = `${merchantDomainName}/success?token=${accessToken}&product=${productId}`
 
-    // Build signature string for WayForPay HMAC-MD5
-    // In stub mode, use a placeholder signature
     const merchantSignature = process.env.WAYFORPAY_SECRET_KEY
       ? generateHmacSignature(
           process.env.WAYFORPAY_SECRET_KEY,
@@ -67,6 +71,23 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       serviceUrl
     }
 
+    // Save order to Supabase
+    const supabase = createSupabaseAdminClient()
+    const { error: dbError } = await supabase.from('orders').insert({
+      order_id: orderId,
+      product_id: productId,
+      amount: product.price,
+      status: 'pending',
+      email: email || null,
+      result_type: resultType || null,
+      access_token: accessToken
+    })
+
+    if (dbError) {
+      console.error('[payment/create] db error:', dbError)
+      return NextResponse.json({ error: 'Failed to create order' }, { status: 500 })
+    }
+
     const response: CreateOrderResponse = {
       orderId,
       accessToken,
@@ -74,29 +95,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       paymentUrl: 'https://secure.wayforpay.com/pay'
     }
 
-    // Log order for debugging (replace with DB save in production)
-    console.log('[payment/create] order created:', {
-      orderId,
-      productId,
-      amount: product.price,
-      email,
-      resultType,
-      accessToken
-    })
-
     return NextResponse.json(response)
   } catch (error) {
     console.error('[payment/create] error:', error)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
-}
-
-function generateHmacSignature(
-  secretKey: string,
-  ...fields: string[]
-): string {
-  // In production, use crypto.createHmac('md5', secretKey).update(fields.join(';')).digest('hex')
-  // Node.js crypto is available in Next.js API routes
-  const { createHmac } = require('crypto') // eslint-disable-line @typescript-eslint/no-require-imports
-  return createHmac('md5', secretKey).update(fields.join(';')).digest('hex')
 }
