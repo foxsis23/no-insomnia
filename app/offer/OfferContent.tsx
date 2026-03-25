@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { PRODUCTS } from '@/data/products'
 import { Product } from '@/types'
 import { createOrder } from '@/lib/stubs'
 import { trackEvent } from '@/lib/analytics'
@@ -11,12 +10,20 @@ export default function OfferContent() {
   const searchParams = useSearchParams()
   const productId = searchParams.get('product') || 'sleep_reason'
   const [product, setProduct] = useState<Product | null>(null)
+  const [loading, setLoading] = useState(true)
   const [email, setEmail] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
 
   useEffect(() => {
-    setProduct(PRODUCTS[productId] || null)
+    fetch('/api/products')
+      .then((r) => r.json())
+      .then((products: Product[]) => {
+        const found = products.find((p) => p.id === productId) || null
+        setProduct(found)
+      })
+      .catch(() => setProduct(null))
+      .finally(() => setLoading(false))
   }, [productId])
 
   async function handlePurchase() {
@@ -26,10 +33,7 @@ export default function OfferContent() {
     trackEvent('offer_purchase_click', { product_id: productId })
 
     try {
-      const order = await createOrder({
-        productId: product.id,
-        email: email || undefined
-      })
+      const order = await createOrder({ productId: product.id, email: email || undefined })
 
       const form = document.createElement('form')
       form.method = 'POST'
@@ -61,10 +65,18 @@ export default function OfferContent() {
     }
   }
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-24">
+        <p className="text-slate-400 text-sm">Завантаження…</p>
+      </div>
+    )
+  }
+
   if (!product) {
     return (
       <div className="flex items-center justify-center py-24">
-        <p className="text-slate-500">Продукт не знайдено</p>
+        <p className="text-slate-500">Продукт не знайдено або недоступний</p>
       </div>
     )
   }

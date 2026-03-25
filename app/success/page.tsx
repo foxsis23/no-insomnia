@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import Header from '@/components/shared/Header'
-import { PRODUCTS, UPSELL_PRODUCTS } from '@/data/products'
+import { PRODUCTS } from '@/data/products'
+import { getUpsellProductsOrdered } from '@/lib/products'
 
 export const metadata: Metadata = {
   title: 'Оплата успішна — безсоння.net',
@@ -35,8 +36,11 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
   const productId = params.product || 'sleep_reason'
   const product = PRODUCTS[productId]
 
-  // Fetch real order data if token provided
-  const orderData = token ? await getOrderData(token) : null
+  // Fetch real order data and upsell products in parallel
+  const [orderData, upsellProducts] = await Promise.all([
+    token ? getOrderData(token) : Promise.resolve(null),
+    getUpsellProductsOrdered(productId)
+  ])
   const contentUrl = orderData?.contentUrl || null
   const productType = orderData?.productType || product?.type || 'text'
 
@@ -49,9 +53,22 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
           <div className="bg-green-50 border border-green-200 rounded-2xl p-6 text-center mb-8">
             <div className="text-4xl mb-3">✅</div>
             <h1 className="text-xl font-bold text-slate-900 mb-1">Оплату отримано!</h1>
-            <p className="text-slate-600 text-sm">
+            <p className="text-slate-600 text-sm mb-4">
               Дякуємо за покупку. Ваш матеріал доступний нижче.
             </p>
+            {token && (
+              <div className="flex flex-col items-center gap-2">
+                <Link
+                  href={`/content/${token}`}
+                  className="bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-medium px-5 py-2 rounded-lg transition-colors"
+                >
+                  Переглянути матеріал →
+                </Link>
+                <Link href="/my" className="text-xs text-slate-400 hover:text-indigo-500 transition-colors">
+                  Всі мої покупки
+                </Link>
+              </div>
+            )}
           </div>
 
           {/* Product content */}
@@ -89,11 +106,11 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
           )}
 
           {/* Upsell */}
+          {upsellProducts.length > 0 && (
           <div>
             <h3 className="font-bold text-slate-900 mb-4">Продовжіть відновлення сну</h3>
             <div className="grid sm:grid-cols-2 gap-4">
-              {UPSELL_PRODUCTS
-                .filter((p) => p.id !== productId)
+              {upsellProducts
                 .slice(0, 4)
                 .map((p) => (
                   <div key={p.id} className="bg-white border border-slate-200 rounded-xl p-5 flex flex-col">
@@ -115,6 +132,7 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
                 ))}
             </div>
           </div>
+          )}
         </div>
       </main>
     </>

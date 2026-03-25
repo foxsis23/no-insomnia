@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { ResultType } from '@/types'
+import { useState, useEffect } from 'react'
+import { ResultType, Product } from '@/types'
 import { createOrder } from '@/lib/stubs'
 import { trackEvent } from '@/lib/analytics'
 
@@ -10,9 +10,20 @@ interface PaywallProps {
 }
 
 export default function Paywall({ resultType }: PaywallProps) {
+  const [price, setPrice] = useState(29)
   const [email, setEmail] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
+
+  useEffect(() => {
+    fetch('/api/products')
+      .then((r) => r.json())
+      .then((products: Product[]) => {
+        const found = products.find((p) => p.id === 'sleep_reason')
+        if (found) setPrice(found.price)
+      })
+      .catch(() => {})
+  }, [])
 
   async function handlePurchase() {
     setIsLoading(true)
@@ -20,13 +31,8 @@ export default function Paywall({ resultType }: PaywallProps) {
     trackEvent('paywall_click', { result_type: resultType })
 
     try {
-      const order = await createOrder({
-        productId: 'sleep_reason',
-        email: email || undefined,
-        resultType
-      })
+      const order = await createOrder({ productId: 'sleep_reason', email: email || undefined, resultType })
 
-      // Build WayForPay form and submit
       const form = document.createElement('form')
       form.method = 'POST'
       form.action = order.paymentUrl
@@ -89,16 +95,14 @@ export default function Paywall({ resultType }: PaywallProps) {
         />
       </div>
 
-      {error && (
-        <p className="text-red-500 text-sm mb-4">{error}</p>
-      )}
+      {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 
       <button
         onClick={handlePurchase}
         disabled={isLoading}
         className="w-full bg-indigo-500 hover:bg-indigo-600 disabled:opacity-60 text-white font-semibold py-4 rounded-xl transition-colors text-lg"
       >
-        {isLoading ? 'Зачекайте…' : 'Отримати повний розбір — 29 грн'}
+        {isLoading ? 'Зачекайте…' : `Отримати повний розбір — ${price} грн`}
       </button>
 
       <p className="text-center text-xs text-slate-400 mt-3">
