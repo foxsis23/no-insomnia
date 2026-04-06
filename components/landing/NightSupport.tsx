@@ -1,10 +1,11 @@
 import Link from 'next/link'
+import { Moon, AlarmClock, Wind, Headphones, type LucideIcon } from 'lucide-react'
 import { Product } from '@/types'
 
-const ICONS: Record<string, string> = {
-  night_support_fall_asleep: '🌙',
-  night_support_woke_up: '⏰',
-  night_support_before_sleep: '😮‍💨'
+const ICONS: Record<string, LucideIcon> = {
+  night_support_fall_asleep: Moon,
+  night_support_woke_up: AlarmClock,
+  night_support_before_sleep: Wind,
 }
 
 interface Props {
@@ -25,22 +26,25 @@ export default function NightSupport({ products }: Props) {
         </div>
 
         <div className="grid sm:grid-cols-3 gap-6">
-          {products.map((product) => (
-            <div key={product.id} className="bg-white rounded-xl p-6 border border-slate-200 flex flex-col">
-              <div className="text-3xl mb-4">{ICONS[product.id] || '🎧'}</div>
-              <h3 className="font-semibold text-slate-900 mb-2">{product.name}</h3>
-              <p className="text-slate-500 text-sm leading-relaxed flex-1 mb-4">{product.description}</p>
-              <div className="flex items-center justify-between">
-                <span className="font-bold text-slate-900">{product.price} грн</span>
-                <Link
-                  href={`/offer?product=${product.id}`}
-                  className="text-indigo-500 hover:text-indigo-600 text-sm font-medium transition-colors"
-                >
-                  Придбати →
-                </Link>
+          {products.map((product) => {
+            const Icon = ICONS[product.id] || Headphones
+            return (
+              <div key={product.id} className="bg-white rounded-xl p-6 border border-slate-200 flex flex-col">
+                <Icon className="w-8 h-8 text-indigo-500 mb-4" strokeWidth={1.5} />
+                <h3 className="font-semibold text-slate-900 mb-2">{product.name}</h3>
+                <p className="text-slate-500 text-sm leading-relaxed flex-1 mb-4">{product.description}</p>
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-slate-900">{product.price} грн</span>
+                  <Link
+                    href={`/offer?product=${product.id}`}
+                    className="text-indigo-500 hover:text-indigo-600 text-sm font-medium transition-colors"
+                  >
+                    Придбати →
+                  </Link>
+                </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </div>
     </section>

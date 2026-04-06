@@ -1,29 +1,24 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { ResultType, Product } from '@/types'
+import { useState } from 'react'
+import { Check } from 'lucide-react'
+import { ResultType } from '@/types'
 import { createOrder } from '@/lib/stubs'
 import { trackEvent } from '@/lib/analytics'
+import { useProducts } from '@/lib/queries'
 
 interface PaywallProps {
   resultType: ResultType
 }
 
 export default function Paywall({ resultType }: PaywallProps) {
-  const [price, setPrice] = useState(29)
+  const { data: products } = useProducts()
+  const price = Number(
+    products?.find((p) => p.id === 'sleep_reason')?.price ?? 29,
+  )
   const [email, setEmail] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
-
-  useEffect(() => {
-    fetch('/api/products')
-      .then((r) => r.json())
-      .then((products: Product[]) => {
-        const found = products.find((p) => p.id === 'sleep_reason')
-        if (found) setPrice(found.price)
-      })
-      .catch(() => {})
-  }, [])
 
   async function handlePurchase() {
     setIsLoading(true)
@@ -79,7 +74,7 @@ export default function Paywall({ resultType }: PaywallProps) {
           'Персональний план на 7 днів'
         ].map((item) => (
           <li key={item} className="flex items-center gap-2 text-sm text-slate-700">
-            <span className="text-indigo-500 flex-shrink-0">✓</span>
+            <Check className="w-4 h-4 text-indigo-500 flex-shrink-0" />
             {item}
           </li>
         ))}

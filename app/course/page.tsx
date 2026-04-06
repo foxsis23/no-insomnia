@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation'
+import { GraduationCap } from 'lucide-react'
 import Header from '@/components/shared/Header'
 import CoursePurchase from './CoursePurchase'
 import { getProduct } from '@/lib/products'
@@ -29,7 +30,7 @@ export default async function CoursePage() {
         <section className="bg-gradient-to-b from-indigo-50 to-slate-50 py-20 px-4">
           <div className="max-w-3xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 bg-indigo-100 text-indigo-700 text-sm font-medium px-3 py-1.5 rounded-full mb-6">
-              🎓 Відеокурс
+              <GraduationCap className="w-4 h-4" /> Відеокурс
             </div>
             <h1 className="text-4xl font-bold text-slate-900 mb-4">Сон без таблеток</h1>
             <p className="text-xl text-slate-600 mb-4">

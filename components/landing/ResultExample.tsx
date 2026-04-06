@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { HeartPulse } from 'lucide-react'
 
 export default function ResultExample() {
   return (
@@ -13,7 +14,9 @@ export default function ResultExample() {
           {/* Free part */}
           <div className="p-8">
             <div className="flex items-center gap-3 mb-6">
-              <div className="text-4xl">😰</div>
+              <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center">
+                <HeartPulse className="w-6 h-6 text-indigo-600" strokeWidth={1.75} />
+              </div>
               <div>
                 <div className="text-xs font-medium text-indigo-500 uppercase tracking-wide mb-1">Ваш тип безсоння</div>
                 <div className="text-xl font-bold text-slate-900">Передсонна тривога</div>

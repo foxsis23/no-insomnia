@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { Moon, Brain, Zap } from 'lucide-react'
 
 export default function Hero() {
   return (
@@ -31,15 +32,15 @@ export default function Hero() {
 
         <div className="mt-12 flex items-center justify-center gap-8 text-sm text-slate-500">
           <div className="flex items-center gap-2">
-            <span className="text-2xl">😴</span>
+            <Moon className="w-5 h-5 text-indigo-500" />
             <span>5 типів безсоння</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-2xl">🧠</span>
+            <Brain className="w-5 h-5 text-indigo-500" />
             <span>Науково обґрунтовано</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-2xl">⚡</span>
+            <Zap className="w-5 h-5 text-indigo-500" />
             <span>Результат одразу</span>
           </div>
         </div>

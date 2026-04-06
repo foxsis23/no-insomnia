@@ -1,50 +1,59 @@
 import { CreateOrderRequest, CreateOrderResponse, ResultType } from '@/types'
 import { PRODUCTS } from '@/data/products'
+import { trackAnalyticsEvent } from '@/lib/api'
 
+// Payment is intentionally not wired to the real backend yet — stubbed client-side.
 export async function createOrder(req: CreateOrderRequest): Promise<CreateOrderResponse> {
-  const response = await fetch('/api/payment/create', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(req)
-  })
-  if (!response.ok) {
-    throw new Error('Failed to create order')
+  const orderId = `stub_${Date.now()}`
+  const accessToken = `tok_${Math.random().toString(36).slice(2)}`
+  const product = PRODUCTS[req.productId]
+  const amount = product?.price ?? 0
+
+  return {
+    orderId,
+    accessToken,
+    formData: {
+      merchantAccount: 'stub',
+      merchantDomainName: 'bezsonnia.net',
+      orderReference: orderId,
+      orderDate: String(Math.floor(Date.now() / 1000)),
+      amount: String(amount),
+      currency: 'UAH',
+      orderTimeout: '49000',
+      productName: [product?.name ?? req.productId],
+      productCount: ['1'],
+      productPrice: [String(amount)],
+      clientFirstName: '',
+      clientLastName: '',
+      clientEmail: req.email ?? '',
+      clientPhone: '',
+      merchantSignature: 'stub',
+      language: 'UA',
+      returnUrl: '/success',
+      serviceUrl: '/success',
+    },
+    paymentUrl: '/success?token=' + accessToken + '&product=' + req.productId,
   }
-  return response.json()
 }
 
-export async function saveTestResult(sessionId: string, resultType: ResultType, answers: number[]): Promise<void> {
-  await fetch('/api/test-result', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ sessionId, resultType, answers })
-  }).catch(() => {
-    // Non-blocking — don't fail the test flow
-  })
+export async function saveTestResult(
+  sessionId: string,
+  resultType: ResultType,
+  answers: number[],
+): Promise<void> {
+  await trackAnalyticsEvent('complete_test', {
+    sessionId,
+    resultType,
+    answers,
+  }).catch(() => {})
 }
 
-export async function getOrderByToken(token: string) {
-  const response = await fetch(`/api/orders/${token}`)
-  if (!response.ok) return null
-  return response.json()
+export async function getOrderByToken(_token: string) {
+  return null
 }
 
 export function getMockProductContent(productId: string): string {
   const product = PRODUCTS[productId]
   if (!product) return ''
-
-  return `# ${product.name}
-
-Дякуємо за покупку! Ваш контент готовий.
-
-> Це демо-версія контенту. Реальний контент буде доступний після інтеграції з CMS.
-
-## Що входить у "${product.name}"
-
-- Детальний розбір вашої ситуації
-- Покрокові техніки та практики
-- Підтримка протягом усього процесу
-- Доступ до матеріалів без обмеження часу
-
-Якщо виникли питання — напишіть нам.`
+  return `# ${product.name}\n\nДякуємо за покупку! Матеріал доступний у розділі «Мої матеріали».`
 }

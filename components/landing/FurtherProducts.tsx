@@ -1,10 +1,11 @@
 import Link from 'next/link'
+import { ClipboardList, Sparkles, GraduationCap, Package, type LucideIcon } from 'lucide-react'
 import { Product } from '@/types'
 
-const ICONS: Record<string, string> = {
-  sleep_return_protocol: '📋',
-  sleep_7_nights_recovery: '🌟',
-  course: '🎓'
+const ICONS: Record<string, LucideIcon> = {
+  sleep_return_protocol: ClipboardList,
+  sleep_7_nights_recovery: Sparkles,
+  course: GraduationCap,
 }
 
 interface Props {
@@ -26,27 +27,30 @@ export default function FurtherProducts({ products }: Props) {
         </div>
 
         <div className="grid sm:grid-cols-3 gap-6">
-          {products.map((product) => (
-            <div key={product.id} className="bg-slate-50 rounded-xl p-6 border border-slate-100 flex flex-col">
-              <div className="flex items-center justify-between mb-4">
-                <span className="text-3xl">{ICONS[product.id] || '📦'}</span>
-                <span className="text-xs font-medium text-indigo-600 bg-indigo-50 px-2 py-1 rounded-full">
-                  {product.tag}
-                </span>
+          {products.map((product) => {
+            const Icon = ICONS[product.id] || Package
+            return (
+              <div key={product.id} className="bg-slate-50 rounded-xl p-6 border border-slate-100 flex flex-col">
+                <div className="flex items-center justify-between mb-4">
+                  <Icon className="w-8 h-8 text-indigo-500" strokeWidth={1.5} />
+                  <span className="text-xs font-medium text-indigo-600 bg-indigo-50 px-2 py-1 rounded-full">
+                    {product.tag}
+                  </span>
+                </div>
+                <h3 className="font-semibold text-slate-900 mb-2">{product.name}</h3>
+                <p className="text-slate-500 text-sm leading-relaxed flex-1 mb-4">{product.description}</p>
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-slate-900 text-lg">{product.price} грн</span>
+                  <Link
+                    href={product.id === 'course' ? '/course' : `/offer?product=${product.id}`}
+                    className="bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+                  >
+                    Детальніше
+                  </Link>
+                </div>
               </div>
-              <h3 className="font-semibold text-slate-900 mb-2">{product.name}</h3>
-              <p className="text-slate-500 text-sm leading-relaxed flex-1 mb-4">{product.description}</p>
-              <div className="flex items-center justify-between">
-                <span className="font-bold text-slate-900 text-lg">{product.price} грн</span>
-                <Link
-                  href={product.id === 'course' ? '/course' : `/offer?product=${product.id}`}
-                  className="bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
-                >
-                  Детальніше
-                </Link>
-              </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </div>
     </section>

@@ -1,30 +1,51 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useMemo, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
+import {
+  Moon,
+  AlarmClock,
+  Wind,
+  ClipboardList,
+  Sparkles,
+  GraduationCap,
+  FileText,
+  type LucideIcon,
+} from 'lucide-react'
 import { Product } from '@/types'
 import { createOrder } from '@/lib/stubs'
 import { trackEvent } from '@/lib/analytics'
+import { useProducts } from '@/lib/queries'
+
+const PRODUCT_ICONS: Record<string, LucideIcon> = {
+  sleep_reason: FileText,
+  night_support_fall_asleep: Moon,
+  night_support_woke_up: AlarmClock,
+  night_support_before_sleep: Wind,
+  sleep_return_protocol: ClipboardList,
+  sleep_7_nights_recovery: Sparkles,
+  course: GraduationCap,
+}
 
 export default function OfferContent() {
   const searchParams = useSearchParams()
   const productId = searchParams.get('product') || 'sleep_reason'
-  const [product, setProduct] = useState<Product | null>(null)
-  const [loading, setLoading] = useState(true)
+  const { data: products, isLoading: loading } = useProducts()
+  const product: Product | null = useMemo(() => {
+    const found = products?.find((p) => p.id === productId)
+    if (!found) return null
+    return {
+      id: found.id,
+      name: found.title,
+      description: found.description,
+      price: Number(found.price),
+      type: 'text',
+      tag: undefined,
+    }
+  }, [products, productId])
   const [email, setEmail] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
-
-  useEffect(() => {
-    fetch('/api/products')
-      .then((r) => r.json())
-      .then((products: Product[]) => {
-        const found = products.find((p) => p.id === productId) || null
-        setProduct(found)
-      })
-      .catch(() => setProduct(null))
-      .finally(() => setLoading(false))
-  }, [productId])
 
   async function handlePurchase() {
     if (!product) return
@@ -81,12 +102,14 @@ export default function OfferContent() {
     )
   }
 
+  const Icon = PRODUCT_ICONS[product.id] || FileText
+
   return (
     <div className="max-w-2xl mx-auto px-4 py-12">
       <div className="bg-white rounded-2xl border border-slate-200 p-8">
-        <span className="text-xs font-medium text-indigo-600 bg-indigo-50 px-2 py-1 rounded-full">
-          {product.tag}
-        </span>
+        <div className="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center">
+          <Icon className="w-6 h-6 text-indigo-600" strokeWidth={1.75} />
+        </div>
         <h1 className="text-2xl font-bold text-slate-900 mt-4 mb-3">{product.name}</h1>
         <p className="text-slate-600 leading-relaxed mb-8">{product.description}</p>
 

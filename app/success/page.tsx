@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { CheckCircle2 } from 'lucide-react'
 import Header from '@/components/shared/Header'
 import { PRODUCTS } from '@/data/products'
 import { getUpsellProductsOrdered } from '@/lib/products'
@@ -13,36 +14,15 @@ interface SuccessPageProps {
   searchParams: Promise<{ token?: string; product?: string }>
 }
 
-interface OrderData {
-  productId: string
-  contentUrl: string | null
-  productType: string | null
-}
-
-async function getOrderData(token: string): Promise<OrderData | null> {
-  try {
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
-    const res = await fetch(`${baseUrl}/api/orders/${token}`, { cache: 'no-store' })
-    if (!res.ok) return null
-    return res.json()
-  } catch {
-    return null
-  }
-}
-
 export default async function SuccessPage({ searchParams }: SuccessPageProps) {
   const params = await searchParams
   const token = params.token
   const productId = params.product || 'sleep_reason'
   const product = PRODUCTS[productId]
 
-  // Fetch real order data and upsell products in parallel
-  const [orderData, upsellProducts] = await Promise.all([
-    token ? getOrderData(token) : Promise.resolve(null),
-    getUpsellProductsOrdered(productId)
-  ])
-  const contentUrl = orderData?.contentUrl || null
-  const productType = orderData?.productType || product?.type || 'text'
+  const upsellProducts = await getUpsellProductsOrdered(productId)
+  const contentUrl: string | null = null
+  const productType = product?.type || 'text'
 
   return (
     <>
@@ -51,7 +31,7 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
         <div className="max-w-2xl mx-auto px-4 py-10">
           {/* Success header */}
           <div className="bg-green-50 border border-green-200 rounded-2xl p-6 text-center mb-8">
-            <div className="text-4xl mb-3">✅</div>
+            <CheckCircle2 className="w-12 h-12 text-green-500 mx-auto mb-3" strokeWidth={1.5} />
             <h1 className="text-xl font-bold text-slate-900 mb-1">Оплату отримано!</h1>
             <p className="text-slate-600 text-sm mb-4">
               Дякуємо за покупку. Ваш матеріал доступний нижче.
