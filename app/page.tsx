@@ -5,6 +5,7 @@ import Hero from '@/components/landing/Hero'
 import WhatTestGives from '@/components/landing/WhatTestGives'
 import HowItWorks from '@/components/landing/HowItWorks'
 import SleepTypes from '@/components/landing/SleepTypes'
+import VideoGallery from '@/components/landing/VideoGallery'
 import TrustBlock from '@/components/landing/TrustBlock'
 import ResultExample from '@/components/landing/ResultExample'
 import NightSupport from '@/components/landing/NightSupport'
@@ -43,6 +44,7 @@ export default async function HomePage() {
         <WhatTestGives />
         <HowItWorks />
         <SleepTypes />
+        <VideoGallery />
         <TrustBlock />
         <ResultExample />
         {showNightSupport && <NightSupport products={audioProducts} />}
