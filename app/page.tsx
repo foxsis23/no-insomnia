@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Header from '@/components/shared/Header'
+import FloatingBot from '@/components/shared/FloatingBot'
 import Hero from '@/components/landing/Hero'
 import WhatTestGives from '@/components/landing/WhatTestGives'
 import HowItWorks from '@/components/landing/HowItWorks'
@@ -49,6 +50,7 @@ export default async function HomePage() {
         <FAQ />
       </main>
       <Footer />
+      <FloatingBot />
     </>
   )
 }

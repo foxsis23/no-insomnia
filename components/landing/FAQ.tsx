@@ -34,10 +34,10 @@ const faqs = [
 
 export default function FAQ() {
   return (
-    <section className="py-20 px-4 bg-slate-50">
+    <section className="py-20 px-4 bg-slate-950">
       <div className="max-w-3xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-slate-900 mb-4">Часті запитання</h2>
+          <h2 className="text-3xl font-bold text-white mb-4">Часті запитання</h2>
         </div>
 
         <Accordion multiple={false} className="space-y-3">
@@ -45,12 +45,12 @@ export default function FAQ() {
             <AccordionItem
               key={i}
               value={`item-${i}`}
-              className="bg-white border border-slate-200 rounded-xl px-6"
+              className="bg-white/5 border border-white/10 rounded-xl px-6"
             >
-              <AccordionTrigger className="text-left text-slate-900 font-medium hover:no-underline py-5">
+              <AccordionTrigger className="text-left text-white font-medium hover:no-underline py-5">
                 {faq.q}
               </AccordionTrigger>
-              <AccordionContent className="text-slate-600 leading-relaxed pb-5">
+              <AccordionContent className="text-slate-300 leading-relaxed pb-5">
                 {faq.a}
               </AccordionContent>
             </AccordionItem>

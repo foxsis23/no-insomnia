@@ -16,28 +16,31 @@ export default function NightSupport({ products }: Props) {
   if (!products.length) return null
 
   return (
-    <section className="py-20 px-4 bg-slate-50">
+    <section className="py-20 px-4 bg-slate-950 border-t border-white/5">
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-slate-900 mb-4">Нічна підтримка</h2>
-          <p className="text-slate-500 text-lg max-w-2xl mx-auto">
+          <h2 className="text-3xl font-bold text-white mb-4">Нічна підтримка</h2>
+          <p className="text-slate-400 text-lg max-w-2xl mx-auto">
             Аудіо-сесії для роботи з різними типами безсоння — слухайте прямо в момент потреби
           </p>
         </div>
 
-        <div className="grid sm:grid-cols-3 gap-6">
+        <div className="flex flex-wrap justify-center items-stretch gap-5">
           {products.map((product) => {
             const Icon = ICONS[product.id] || Headphones
             return (
-              <div key={product.id} className="bg-white rounded-xl p-6 border border-slate-200 flex flex-col">
-                <Icon className="w-8 h-8 text-indigo-500 mb-4" strokeWidth={1.5} />
-                <h3 className="font-semibold text-slate-900 mb-2">{product.name}</h3>
-                <p className="text-slate-500 text-sm leading-relaxed flex-1 mb-4">{product.description}</p>
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-slate-900">{product.price} грн</span>
+              <div
+                key={product.id}
+                className="flex flex-col rounded-2xl p-6 w-full sm:w-72 bg-white/5 ring-1 ring-white/10 hover:ring-indigo-500/40 transition-colors"
+              >
+                <Icon className="w-9 h-9 text-indigo-400" strokeWidth={1.75} />
+                <h3 className="mt-4 font-bold text-white text-lg">{product.name}</h3>
+                <p className="mt-1 text-sm text-slate-400 leading-snug flex-1">{product.description}</p>
+                <div className="mt-6 flex items-center justify-between">
+                  <span className="text-2xl font-bold text-white">{product.price} грн</span>
                   <Link
                     href={`/offer?product=${product.id}`}
-                    className="text-indigo-500 hover:text-indigo-600 text-sm font-medium transition-colors"
+                    className="text-indigo-400 hover:text-indigo-300 text-sm font-medium transition-colors"
                   >
                     Придбати →
                   </Link>

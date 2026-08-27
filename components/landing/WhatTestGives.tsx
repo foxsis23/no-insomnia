@@ -25,24 +25,24 @@ const benefits: { Icon: LucideIcon; title: string; description: string }[] = [
 
 export default function WhatTestGives() {
   return (
-    <section className="py-20 px-4 bg-white">
+    <section className="py-20 px-4 bg-slate-950">
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-slate-900 mb-4">Що ви отримаєте після тесту</h2>
-          <p className="text-slate-500 text-lg max-w-2xl mx-auto">
+          <h2 className="text-3xl font-bold text-white mb-4">Що ви отримаєте після тесту</h2>
+          <p className="text-slate-400 text-lg max-w-2xl mx-auto">
             Тест визначає один із 5 типів безсоння і дає персоналізований розбір
           </p>
         </div>
 
         <div className="grid sm:grid-cols-2 gap-6">
           {benefits.map(({ Icon, title, description }) => (
-            <div key={title} className="flex gap-4 p-6 bg-slate-50 rounded-xl border border-slate-100">
-              <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                <Icon className="w-6 h-6 text-indigo-600" strokeWidth={1.75} />
+            <div key={title} className="flex gap-4 p-6 bg-white/5 rounded-xl border border-white/10">
+              <div className="w-12 h-12 bg-indigo-500/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                <Icon className="w-6 h-6 text-indigo-400" strokeWidth={1.75} />
               </div>
               <div>
-                <h3 className="font-semibold text-slate-900 mb-1">{title}</h3>
-                <p className="text-slate-600 text-sm leading-relaxed">{description}</p>
+                <h3 className="font-semibold text-white mb-1">{title}</h3>
+                <p className="text-slate-300 text-sm leading-relaxed">{description}</p>
               </div>
             </div>
           ))}

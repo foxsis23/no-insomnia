@@ -25,26 +25,26 @@ const reviews = [
 
 export default function TrustBlock() {
   return (
-    <section className="py-20 px-4 bg-slate-50">
+    <section className="py-20 px-4 bg-slate-950">
       <div className="max-w-5xl mx-auto">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 mb-16">
           {stats.map((stat) => (
             <div key={stat.value} className="text-center">
-              <div className="text-3xl font-bold text-indigo-500 mb-1">{stat.value}</div>
-              <div className="text-slate-500 text-sm">{stat.label}</div>
+              <div className="text-3xl font-bold text-indigo-400 mb-1">{stat.value}</div>
+              <div className="text-slate-400 text-sm">{stat.label}</div>
             </div>
           ))}
         </div>
 
-        <h2 className="text-2xl font-bold text-slate-900 text-center mb-8">Що кажуть люди</h2>
+        <h2 className="text-2xl font-bold text-white text-center mb-8">Що кажуть люди</h2>
 
         <div className="grid sm:grid-cols-3 gap-6">
           {reviews.map((review) => (
-            <div key={review.name} className="bg-white p-6 rounded-xl border border-slate-200">
+            <div key={review.name} className="bg-white/5 p-6 rounded-xl border border-white/10">
               <div className="flex text-indigo-400 mb-4">{'★★★★★'}</div>
-              <p className="text-slate-600 text-sm leading-relaxed mb-4">"{review.text}"</p>
-              <div className="text-sm font-medium text-slate-900">
-                {review.name} <span className="text-slate-400 font-normal">• {review.city}</span>
+              <p className="text-slate-300 text-sm leading-relaxed mb-4">"{review.text}"</p>
+              <div className="text-sm font-medium text-white">
+                {review.name} <span className="text-slate-500 font-normal">• {review.city}</span>
               </div>
             </div>
           ))}

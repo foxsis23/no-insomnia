@@ -9,6 +9,7 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://no-insomnia.net'),
   title: 'безсоння.net — Дізнайтесь свій тип безсоння',
   description: 'Безкоштовний тест з 10 запитань. Дізнайтесь свій тип безсоння, його причину та конкретні кроки для відновлення нормального сну.',
   openGraph: {
@@ -16,6 +17,7 @@ export const metadata: Metadata = {
     description: 'Безкоштовний тест з 10 запитань. Персоналізований розбір та план дій.',
     locale: 'uk_UA',
     type: 'website',
+    images: [{ url: '/images/og-image.webp', width: 1200, height: 630, alt: 'безсоння.net' }],
   }
 }
 
@@ -26,7 +28,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="uk" className={`${inter.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col bg-slate-50">
+      <body className="min-h-full flex flex-col bg-slate-950">
         <QueryProvider>{children}</QueryProvider>
       </body>
     </html>
