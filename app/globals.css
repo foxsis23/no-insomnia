@@ -140,15 +140,14 @@
   .bot-float { animation: none; }
 }
 
-/* Карусель відео: ширина слайда керує і розміром, і зсувом треку */
-.vg-track {
-  --slide: 82%;
-  transform: translateX(calc(50% - var(--slide) / 2 - var(--i) * var(--slide)));
-}
-@media (min-width: 640px) {
-  .vg-track { --slide: 52%; }
-}
-@media (min-width: 1024px) {
-  .vg-track { --slide: 36%; }
-}
+/* Карусель відео: слайд = 50% вьюпорта, отже видно центр + по половині сусідів */
+.vg-track { --slide: 78%; }
+@media (min-width: 640px) { .vg-track { --slide: 60%; } }
+@media (min-width: 1024px) { .vg-track { --slide: 50%; } }
 .vg-slide { width: var(--slide); }
+
+/* Краї розчиняються, щоб дальні слайди не обрізались різкою межею */
+.vg-viewport {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 14%, #000 86%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 14%, #000 86%, transparent);
+}

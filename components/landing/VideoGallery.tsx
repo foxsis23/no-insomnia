@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { Play, ChevronLeft, ChevronRight } from 'lucide-react'
 import { trackEvent } from '@/lib/analytics'
@@ -24,38 +24,60 @@ export default function VideoGallery() {
   // Плеєр вантажиться лише після кліку — 10 iframe одразу вбили б завантаження
   const [playing, setPlaying] = useState<string | null>(null)
 
+  // Зсув рахуємо в пікселях за реальними розмірами: відсотки в translateX
+  // рахуються від ширини треку, а не контейнера, і центр «їде».
+  const viewportRef = useRef<HTMLDivElement>(null)
+  const slideRef = useRef<HTMLDivElement>(null)
+  const [offset, setOffset] = useState(0)
+
+  useEffect(() => {
+    const measure = () => {
+      const viewport = viewportRef.current
+      const slide = slideRef.current
+      if (!viewport || !slide) return
+      const slideW = slide.offsetWidth
+      setOffset(viewport.offsetWidth / 2 - slideW / 2 - active * slideW)
+    }
+    measure()
+    const ro = new ResizeObserver(measure)
+    if (viewportRef.current) ro.observe(viewportRef.current)
+    return () => ro.disconnect()
+  }, [active])
+
   const go = (next: number) => {
-    const clamped = (next + VIDEOS.length) % VIDEOS.length
-    setActive(clamped)
+    setActive((next + VIDEOS.length) % VIDEOS.length)
     setPlaying(null) // перелистнули — зупиняємо попереднє відео
   }
 
   return (
     <section id="videos" className="py-20 bg-slate-950 border-t border-white/5 overflow-hidden">
-      <div className="px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-white mb-4">Відео про сон</h2>
-          <p className="text-slate-400 text-lg max-w-2xl mx-auto">
-            Короткі розбори від лікаря — дивіться прямо тут
-          </p>
-        </div>
+      <div className="px-4 text-center mb-12">
+        <h2 className="text-3xl font-bold text-white mb-4">Відео про сон</h2>
+        <p className="text-slate-400 text-lg max-w-2xl mx-auto">
+          Короткі розбори від лікаря — дивіться прямо тут
+        </p>
       </div>
 
-      <div className="relative max-w-6xl mx-auto">
-        {/* Трек: активний слайд завжди по центру, ширина слайда — у CSS */}
+      <div className="relative max-w-4xl mx-auto">
+        <div ref={viewportRef} className="vg-viewport overflow-hidden">
         <div
           className="vg-track flex transition-transform duration-500 ease-out"
-          style={{ '--i': active } as React.CSSProperties}
+          style={{ transform: `translateX(${offset}px)` }}
         >
           {VIDEOS.map((video, i) => {
             const isActive = i === active
             return (
-              <div key={video.id} className="vg-slide flex-none px-2 sm:px-3">
+              <div
+                key={video.id}
+                ref={i === 0 ? slideRef : undefined}
+                className="vg-slide flex-none px-2 sm:px-3"
+              >
+                {/* центральний слайд на ~30% більший за сусідів */}
                 <div
-                  className={`relative aspect-video rounded-2xl overflow-hidden border bg-black transition-all duration-500 ${
+                  className={`relative aspect-video rounded-2xl overflow-hidden border bg-black transition-all duration-500 ease-out ${
                     isActive
                       ? 'border-indigo-500/40 scale-100 opacity-100'
-                      : 'border-white/10 scale-95 opacity-40'
+                      : 'border-white/10 scale-[0.8] opacity-35 blur-[3px]'
                   }`}
                 >
                   {playing === video.id ? (
@@ -71,7 +93,7 @@ export default function VideoGallery() {
                       type="button"
                       onClick={() => {
                         if (!isActive) {
-                          go(i) // клік по сусідньому — просто гортаємо до нього
+                          go(i) // клік по сусідньому — гортаємо до нього
                           return
                         }
                         setPlaying(video.id)
@@ -84,10 +106,9 @@ export default function VideoGallery() {
                         src={`https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`}
                         alt={video.title}
                         fill
-                        sizes="(max-width: 640px) 82vw, (max-width: 1024px) 52vw, 36vw"
+                        sizes="(max-width: 640px) 78vw, (max-width: 1024px) 60vw, 50vw"
                         className="object-cover transition-transform duration-500 group-hover:scale-105"
                       />
-                      {/* затемнення: сусідні слайди йдуть у тінь */}
                       <span
                         className={`absolute inset-0 transition-colors ${
                           isActive ? 'bg-slate-950/25 group-hover:bg-slate-950/10' : 'bg-slate-950/70'
@@ -107,12 +128,13 @@ export default function VideoGallery() {
             )
           })}
         </div>
+        </div>
 
         <button
           type="button"
           onClick={() => go(active - 1)}
           aria-label="Попереднє відео"
-          className="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 z-10 w-11 h-11 rounded-full bg-slate-900/80 border border-white/10 hover:border-indigo-500/40 backdrop-blur-sm flex items-center justify-center text-white transition-colors cursor-pointer"
+          className="absolute -left-2 sm:-left-6 top-1/2 -translate-y-1/2 z-10 w-11 h-11 rounded-full bg-slate-900/80 border border-white/10 hover:border-indigo-500/40 backdrop-blur-sm flex items-center justify-center text-white transition-colors cursor-pointer"
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
@@ -120,15 +142,14 @@ export default function VideoGallery() {
           type="button"
           onClick={() => go(active + 1)}
           aria-label="Наступне відео"
-          className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 z-10 w-11 h-11 rounded-full bg-slate-900/80 border border-white/10 hover:border-indigo-500/40 backdrop-blur-sm flex items-center justify-center text-white transition-colors cursor-pointer"
+          className="absolute -right-2 sm:-right-6 top-1/2 -translate-y-1/2 z-10 w-11 h-11 rounded-full bg-slate-900/80 border border-white/10 hover:border-indigo-500/40 backdrop-blur-sm flex items-center justify-center text-white transition-colors cursor-pointer"
         >
           <ChevronRight className="w-5 h-5" />
         </button>
       </div>
 
       <div className="px-4">
-        <p className="text-center text-white font-medium mt-8 mb-5 min-h-6">{VIDEOS[active].title}</p>
-
+        <p className="text-center text-white font-medium mt-8 mb-5">{VIDEOS[active].title}</p>
         <div className="flex justify-center gap-2">
           {VIDEOS.map((video, i) => (
             <button
