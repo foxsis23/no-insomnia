@@ -41,16 +41,16 @@ export default function VideoGallery() {
         </div>
       </div>
 
-      <div className="relative">
-        {/* Трек: активний слайд завжди по центру */}
+      <div className="relative max-w-6xl mx-auto">
+        {/* Трек: активний слайд завжди по центру, ширина слайда — у CSS */}
         <div
-          className="flex transition-transform duration-500 ease-out"
-          style={{ transform: `translateX(calc(15% - ${active * 70}%))` }}
+          className="vg-track flex transition-transform duration-500 ease-out"
+          style={{ '--i': active } as React.CSSProperties}
         >
           {VIDEOS.map((video, i) => {
             const isActive = i === active
             return (
-              <div key={video.id} className="flex-none w-[70%] px-2 sm:px-3">
+              <div key={video.id} className="vg-slide flex-none px-2 sm:px-3">
                 <div
                   className={`relative aspect-video rounded-2xl overflow-hidden border bg-black transition-all duration-500 ${
                     isActive
@@ -84,7 +84,7 @@ export default function VideoGallery() {
                         src={`https://i.ytimg.com/vi/${video.id}/hqdefault.jpg`}
                         alt={video.title}
                         fill
-                        sizes="(max-width: 640px) 70vw, 60vw"
+                        sizes="(max-width: 640px) 82vw, (max-width: 1024px) 52vw, 36vw"
                         className="object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                       {/* затемнення: сусідні слайди йдуть у тінь */}
@@ -95,8 +95,8 @@ export default function VideoGallery() {
                       />
                       {isActive && (
                         <span className="absolute inset-0 flex items-center justify-center">
-                          <span className="w-16 h-16 rounded-full bg-indigo-500/90 group-hover:bg-indigo-400 flex items-center justify-center transition-colors shadow-lg shadow-black/40">
-                            <Play className="w-7 h-7 text-white ml-1" fill="currentColor" />
+                          <span className="w-14 h-14 rounded-full bg-indigo-500/90 group-hover:bg-indigo-400 flex items-center justify-center transition-colors shadow-lg shadow-black/40">
+                            <Play className="w-6 h-6 text-white ml-0.5" fill="currentColor" />
                           </span>
                         </span>
                       )}
