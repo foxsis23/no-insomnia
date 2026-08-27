@@ -140,14 +140,27 @@
   .bot-float { animation: none; }
 }
 
-/* Карусель відео: слайд = 50% вьюпорта, отже видно центр + по половині сусідів */
-.vg-track { --slide: 78%; }
-@media (min-width: 640px) { .vg-track { --slide: 60%; } }
-@media (min-width: 1024px) { .vg-track { --slide: 50%; } }
-.vg-slide { width: var(--slide); }
-
-/* Краї розчиняються, щоб дальні слайди не обрізались різкою межею */
-.vg-viewport {
-  -webkit-mask-image: linear-gradient(to right, transparent, #000 14%, #000 86%, transparent);
-  mask-image: linear-gradient(to right, transparent, #000 14%, #000 86%, transparent);
+/* Карусель відео.
+   --w   — ширина картки (центральна велика)
+   --step — відстань між центрами сусідніх карток: менша за ширину,
+            тому сусіди заходять за краї й видно приблизно по половині. */
+.vg {
+  --w: 86vw;
+  --step: calc(var(--w) * 0.86);
+  height: calc(var(--w) * 9 / 16);
+}
+@media (min-width: 640px) {
+  .vg { --w: 66vw; }
+}
+@media (min-width: 1024px) {
+  .vg { --w: min(820px, 58vw); }
+}
+.vg-item {
+  width: var(--w);
+  transform: translateX(calc(-50% + var(--r) * var(--step))) scale(var(--s));
+}
+/* краї розчиняються, щоб дальні картки не обривались різкою межею */
+.vg-mask {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
 }
