@@ -25,35 +25,35 @@ export default async function CoursePage() {
   return (
     <>
       <Header />
-      <main className="flex-1 bg-slate-50 min-h-screen">
+      <main className="flex-1 bg-slate-950 min-h-screen">
         {/* Hero */}
         <section className="bg-gradient-to-b from-indigo-50 to-slate-50 py-20 px-4">
           <div className="max-w-3xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 bg-indigo-100 text-indigo-700 text-sm font-medium px-3 py-1.5 rounded-full mb-6">
+            <div className="inline-flex items-center gap-2 bg-indigo-500/10 text-indigo-300 text-sm font-medium px-3 py-1.5 rounded-full mb-6">
               <GraduationCap className="w-4 h-4" /> Відеокурс
             </div>
-            <h1 className="text-4xl font-bold text-slate-900 mb-4">Сон без таблеток</h1>
-            <p className="text-xl text-slate-600 mb-4">
+            <h1 className="text-4xl font-bold text-white mb-4">Сон без таблеток</h1>
+            <p className="text-xl text-slate-300 mb-4">
               Повний курс від лікаря-сомнолога. 8 модулів, 40+ відеоуроків.
             </p>
-            <div className="text-4xl font-bold text-slate-900">{course.price} грн</div>
-            <p className="text-slate-500 text-sm mt-1">Довічний доступ</p>
+            <div className="text-4xl font-bold text-white">{course.price} грн</div>
+            <p className="text-slate-400 text-sm mt-1">Довічний доступ</p>
           </div>
         </section>
 
         {/* Modules */}
         <section className="py-16 px-4">
           <div className="max-w-3xl mx-auto">
-            <h2 className="text-2xl font-bold text-slate-900 mb-8 text-center">Програма курсу</h2>
+            <h2 className="text-2xl font-bold text-white mb-8 text-center">Програма курсу</h2>
             <div className="space-y-3">
               {modules.map((mod, i) => (
-                <div key={i} className="bg-white border border-slate-200 rounded-xl p-5 flex gap-4">
-                  <div className="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center text-sm font-bold flex-shrink-0">
+                <div key={i} className="bg-white/5 border border-white/10 rounded-xl p-5 flex gap-4">
+                  <div className="w-8 h-8 bg-indigo-500/10 text-indigo-400 rounded-lg flex items-center justify-center text-sm font-bold flex-shrink-0">
                     {i + 1}
                   </div>
                   <div>
-                    <div className="font-medium text-slate-900">{mod.title}</div>
-                    <div className="text-slate-500 text-sm mt-0.5">{mod.description}</div>
+                    <div className="font-medium text-white">{mod.title}</div>
+                    <div className="text-slate-400 text-sm mt-0.5">{mod.description}</div>
                   </div>
                 </div>
               ))}

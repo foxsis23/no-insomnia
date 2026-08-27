@@ -31,7 +31,7 @@ export default async function ResultPage({ searchParams }: ResultPageProps) {
   return (
     <>
       <Header />
-      <main className="flex-1 bg-slate-50 min-h-screen">
+      <main className="flex-1 bg-slate-950 min-h-screen">
         <div className="max-w-2xl mx-auto px-4 py-10">
           <ResultCard result={result} />
 

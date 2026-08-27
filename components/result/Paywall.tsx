@@ -59,9 +59,9 @@ export default function Paywall({ resultType }: PaywallProps) {
   }
 
   return (
-    <div className="bg-gradient-to-br from-indigo-50 to-slate-50 rounded-2xl border border-indigo-100 p-8 mt-6">
-      <h2 className="text-xl font-bold text-slate-900 mb-2">Повний розбір вашого типу</h2>
-      <p className="text-slate-600 mb-6 text-sm leading-relaxed">
+    <div className="bg-gradient-to-br from-indigo-50 to-slate-50 rounded-2xl border border-indigo-500/20 p-8 mt-6">
+      <h2 className="text-xl font-bold text-white mb-2">Повний розбір вашого типу</h2>
+      <p className="text-slate-300 mb-6 text-sm leading-relaxed">
         Детальне пояснення, чому саме з вами це відбувається — і конкретний план дій на 7 днів.
       </p>
 
@@ -73,8 +73,8 @@ export default function Paywall({ resultType }: PaywallProps) {
           'Що НЕ робити (типові помилки)',
           'Персональний план на 7 днів'
         ].map((item) => (
-          <li key={item} className="flex items-center gap-2 text-sm text-slate-700">
-            <Check className="w-4 h-4 text-indigo-500 flex-shrink-0" />
+          <li key={item} className="flex items-center gap-2 text-sm text-slate-200">
+            <Check className="w-4 h-4 text-indigo-400 flex-shrink-0" />
             {item}
           </li>
         ))}
@@ -86,7 +86,7 @@ export default function Paywall({ resultType }: PaywallProps) {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Email (необов'язково) — отримати на пошту"
-          className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-transparent"
+          className="w-full border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-transparent"
         />
       </div>
 
@@ -95,12 +95,12 @@ export default function Paywall({ resultType }: PaywallProps) {
       <button
         onClick={handlePurchase}
         disabled={isLoading}
-        className="w-full bg-indigo-500 hover:bg-indigo-600 disabled:opacity-60 text-white font-semibold py-4 rounded-xl transition-colors text-lg"
+        className="w-full bg-indigo-500 hover:bg-indigo-400 disabled:opacity-60 text-white font-semibold py-4 rounded-xl transition-colors text-lg"
       >
         {isLoading ? 'Зачекайте…' : `Отримати повний розбір — ${price} грн`}
       </button>
 
-      <p className="text-center text-xs text-slate-400 mt-3">
+      <p className="text-center text-xs text-slate-500 mt-3">
         Безпечна оплата через WayForPay. Миттєвий доступ після оплати.
       </p>
     </div>

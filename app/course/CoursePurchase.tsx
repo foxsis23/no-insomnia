@@ -52,24 +52,24 @@ export default function CoursePurchase({ price }: Props) {
   }
 
   return (
-    <div className="max-w-md mx-auto bg-white rounded-2xl border border-slate-200 p-8">
-      <h3 className="font-bold text-slate-900 text-xl mb-6 text-center">Отримати курс</h3>
+    <div className="max-w-md mx-auto bg-white/5 rounded-2xl border border-white/10 p-8">
+      <h3 className="font-bold text-white text-xl mb-6 text-center">Отримати курс</h3>
       <input
         type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder="Email (необов'язково)"
-        className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm mb-4 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-300"
+        className="w-full border border-white/10 rounded-xl px-4 py-3 text-sm mb-4 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-300"
       />
       {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
       <button
         onClick={handlePurchase}
         disabled={isLoading}
-        className="w-full bg-indigo-500 hover:bg-indigo-600 disabled:opacity-60 text-white font-semibold py-4 rounded-xl transition-colors text-lg"
+        className="w-full bg-indigo-500 hover:bg-indigo-400 disabled:opacity-60 text-white font-semibold py-4 rounded-xl transition-colors text-lg"
       >
         {isLoading ? 'Зачекайте…' : `Придбати курс — ${price} грн`}
       </button>
-      <p className="text-center text-xs text-slate-400 mt-3">
+      <p className="text-center text-xs text-slate-500 mt-3">
         Безпечна оплата. Довічний доступ до матеріалів.
       </p>
     </div>

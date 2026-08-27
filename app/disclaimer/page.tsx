@@ -9,10 +9,10 @@ export default function DisclaimerPage() {
   return (
     <>
       <Header />
-      <main className="flex-1 bg-slate-50 min-h-screen">
+      <main className="flex-1 bg-slate-950 min-h-screen">
         <div className="max-w-3xl mx-auto px-4 py-12">
-          <h1 className="text-3xl font-bold text-slate-900 mb-8">Медичне застереження</h1>
-          <div className="bg-amber-50 border border-amber-200 rounded-2xl p-8 text-sm leading-relaxed space-y-4 text-amber-900">
+          <h1 className="text-3xl font-bold text-white mb-8">Медичне застереження</h1>
+          <div className="bg-amber-50 border border-amber-500/20 rounded-2xl p-8 text-sm leading-relaxed space-y-4 text-amber-200">
             <p className="font-semibold text-base">Важлива інформація</p>
             <p>
               Усі матеріали на сайті безсоння.net мають виключно інформаційний та освітній характер.

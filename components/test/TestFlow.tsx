@@ -47,7 +47,7 @@ export default function TestFlow() {
     return (
       <div className="flex flex-col items-center justify-center py-24 gap-4">
         <div className="w-8 h-8 border-3 border-indigo-500 border-t-transparent rounded-full animate-spin" />
-        <p className="text-slate-500">Аналізуємо ваші відповіді…</p>
+        <p className="text-slate-400">Аналізуємо ваші відповіді…</p>
       </div>
     )
   }
@@ -68,7 +68,7 @@ export default function TestFlow() {
         <button
           onClick={handleNext}
           disabled={selectedAnswer === null}
-          className="bg-indigo-500 hover:bg-indigo-600 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold px-8 py-3 rounded-xl transition-colors"
+          className="bg-indigo-500 hover:bg-indigo-400 disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold px-8 py-3 rounded-xl transition-colors"
         >
           {isLast ? 'Отримати результат' : 'Далі →'}
         </button>

@@ -8,11 +8,11 @@ export default function ProgressBar({ current, total }: ProgressBarProps) {
 
   return (
     <div className="w-full">
-      <div className="flex justify-between text-sm text-slate-500 mb-2">
+      <div className="flex justify-between text-sm text-slate-400 mb-2">
         <span>Запитання {current} з {total}</span>
         <span>{percent}%</span>
       </div>
-      <div className="w-full bg-slate-200 rounded-full h-2">
+      <div className="w-full bg-white/10 rounded-full h-2">
         <div
           className="bg-indigo-500 h-2 rounded-full transition-all duration-300"
           style={{ width: `${percent}%` }}

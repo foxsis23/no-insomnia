@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { trackEvent } from '@/lib/analytics'
 
-// TODO: підтвердити посилання на бота для безсоння
+// Той самий бот, що й у тривоги, але зі своїм партнерським діплінком
 const BOT_LINK = 'https://t.me/gss_sofia_bot?start=partner_bezsonnya'
 const BOT_NAME = 'Софія'
 const SHOW_AFTER_PX = 600
