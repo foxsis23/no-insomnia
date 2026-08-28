@@ -6,6 +6,8 @@ import Header from '@/components/shared/Header'
 import { fetchMe } from '@/lib/api'
 import { useProducts } from '@/lib/queries'
 import { PRODUCT_CONTENT } from '@/data/productContent'
+import CourseVideos from '@/components/course/CourseVideos'
+import { COURSE_PRODUCT_ID } from '@/data/courseVideos'
 
 interface Props {
   token: string
@@ -110,6 +112,12 @@ export default function ContentView({ token, productId }: Props) {
                   {content?.title || p.title}
                 </h1>
                 <p className="text-slate-400 text-sm mb-6">{p.description}</p>
+
+                {p.id === COURSE_PRODUCT_ID && (
+                  <div className="mb-6">
+                    <CourseVideos token={token} />
+                  </div>
+                )}
 
                 {p.videoUrl && (
                   <div

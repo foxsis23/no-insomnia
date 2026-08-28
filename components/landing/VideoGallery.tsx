@@ -19,7 +19,12 @@ const VIDEOS: { id: string; title: string }[] = [
   { id: '1WTduMFrZT8', title: 'Коли потрібен лікар' },
 ]
 
-const N = VIDEOS.length
+// На лендінгу показуємо лише кілька роликів як прев'ю —
+// решта уроків закрита й доступна після оплати курсу.
+const PREVIEW_COUNT = 3
+const PREVIEW = VIDEOS.slice(0, PREVIEW_COUNT)
+
+const N = PREVIEW.length
 
 // Позиція картки відносно активної з урахуванням кільця:
 // для активної 0, для сусідів ±1. Завдяки цьому ліворуч від першої
@@ -52,7 +57,7 @@ export default function VideoGallery() {
 
       <div className="relative">
         <div className="vg vg-mask relative w-full">
-          {VIDEOS.map((video, i) => {
+          {PREVIEW.map((video, i) => {
             const r = relative(i, active)
             const isActive = r === 0
             const isNeighbour = Math.abs(r) === 1
@@ -138,9 +143,9 @@ export default function VideoGallery() {
       </div>
 
       <div className="px-4">
-        <p className="text-center text-white font-medium text-lg mt-10 mb-5">{VIDEOS[active].title}</p>
+        <p className="text-center text-white font-medium text-lg mt-10 mb-5">{PREVIEW[active].title}</p>
         <div className="flex justify-center gap-2">
-          {VIDEOS.map((video, i) => (
+          {PREVIEW.map((video, i) => (
             <button
               key={video.id}
               type="button"
