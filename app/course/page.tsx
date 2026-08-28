@@ -41,6 +41,11 @@ export default async function CoursePage() {
           </div>
         </section>
 
+        {/* Блок покупки продубльовано вгорі — щоб не гортати всю програму */}
+        <section className="py-10 px-4">
+          <CoursePurchase price={course.price} />
+        </section>
+
         {/* Modules */}
         <section className="py-16 px-4">
           <div className="max-w-3xl mx-auto">
