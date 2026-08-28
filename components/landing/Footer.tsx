@@ -37,7 +37,6 @@ export default function Footer() {
 
         <div className="border-t border-white/10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-slate-500">
           <p>© {new Date().getFullYear()} безсоння.net. Всі права захищені.</p>
-          <p>ФОП Приклад В.В. | Тест має виключно освітній характер</p>
         </div>
       </div>
     </footer>
