@@ -27,7 +27,7 @@ export default async function CoursePage() {
       <Header />
       <main className="flex-1 bg-slate-950 min-h-screen">
         {/* Hero */}
-        <section className="bg-gradient-to-b from-indigo-50 to-slate-50 py-20 px-4">
+        <section className="bg-gradient-to-b from-indigo-950/40 to-slate-950 py-20 px-4">
           <div className="max-w-3xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 bg-indigo-500/10 text-indigo-300 text-sm font-medium px-3 py-1.5 rounded-full mb-6">
               <GraduationCap className="w-4 h-4" /> Відеокурс

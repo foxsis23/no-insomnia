@@ -59,7 +59,7 @@ export default function Paywall({ resultType }: PaywallProps) {
   }
 
   return (
-    <div className="bg-gradient-to-br from-indigo-50 to-slate-50 rounded-2xl border border-indigo-500/20 p-8 mt-6">
+    <div className="bg-gradient-to-br from-indigo-950/40 to-slate-950 rounded-2xl border border-indigo-500/20 p-8 mt-6">
       <h2 className="text-xl font-bold text-white mb-2">Повний розбір вашого типу</h2>
       <p className="text-slate-300 mb-6 text-sm leading-relaxed">
         Детальне пояснення, чому саме з вами це відбувається — і конкретний план дій на 7 днів.

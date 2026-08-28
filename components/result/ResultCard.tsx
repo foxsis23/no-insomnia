@@ -18,7 +18,7 @@ export default function ResultCard({ result }: ResultCardProps) {
   return (
     <div className="bg-white/5 rounded-2xl border border-white/10 p-8">
       <div className="flex items-center gap-4 mb-6">
-        <div className="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center">
+        <div className="w-16 h-16 bg-indigo-500/10 rounded-2xl flex items-center justify-center">
           <Icon className="w-8 h-8 text-indigo-400" strokeWidth={1.5} />
         </div>
         <div>

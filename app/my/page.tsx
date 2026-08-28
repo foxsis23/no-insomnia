@@ -100,7 +100,7 @@ export default function MyPage() {
                   key={p.id}
                   className="bg-white/5 rounded-2xl border border-white/10 p-6 flex items-center gap-4"
                 >
-                  <div className="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 bg-indigo-500/10 rounded-xl flex items-center justify-center flex-shrink-0">
                     <FileText className="w-6 h-6 text-indigo-400" strokeWidth={1.75} />
                   </div>
                   <div className="flex-1 min-w-0">

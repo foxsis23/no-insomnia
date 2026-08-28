@@ -107,7 +107,7 @@ export default function OfferContent() {
   return (
     <div className="max-w-2xl mx-auto px-4 py-12">
       <div className="bg-white/5 rounded-2xl border border-white/10 p-8">
-        <div className="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center">
+        <div className="w-12 h-12 bg-indigo-500/10 rounded-xl flex items-center justify-center">
           <Icon className="w-6 h-6 text-indigo-400" strokeWidth={1.75} />
         </div>
         <h1 className="text-2xl font-bold text-white mt-4 mb-3">{product.name}</h1>

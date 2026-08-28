@@ -20,7 +20,7 @@ export default function QuestionCard({ question, selectedAnswer, onSelect }: Que
             onClick={() => onSelect(index)}
             className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-150 text-sm leading-relaxed ${
               selectedAnswer === index
-                ? 'border-indigo-500 bg-indigo-50 text-indigo-200'
+                ? 'border-indigo-500 bg-indigo-500/10 text-indigo-200'
                 : 'border-white/10 hover:border-indigo-500/20 hover:bg-white/10 text-slate-200'
             }`}
           >

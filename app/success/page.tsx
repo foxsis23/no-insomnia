@@ -55,7 +55,7 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
           {product && (
             <div className="bg-white/5 rounded-2xl border border-white/10 p-8 mb-8">
               <div className="flex items-center gap-3 mb-4">
-                <span className="text-xs font-medium text-indigo-400 bg-indigo-50 px-2 py-1 rounded-full">
+                <span className="text-xs font-medium text-indigo-400 bg-indigo-500/10 px-2 py-1 rounded-full">
                   {product.tag}
                 </span>
                 <h2 className="font-bold text-white">{product.name}</h2>
@@ -95,7 +95,7 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
                 .map((p) => (
                   <div key={p.id} className="bg-white/5 border border-white/10 rounded-xl p-5 flex flex-col">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-xs font-medium text-indigo-400 bg-indigo-50 px-2 py-0.5 rounded-full">
+                      <span className="text-xs font-medium text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded-full">
                         {p.tag}
                       </span>
                       <span className="font-bold text-white text-sm">{p.price} грн</span>

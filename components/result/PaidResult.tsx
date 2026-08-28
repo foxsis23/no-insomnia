@@ -50,7 +50,7 @@ export default function PaidResult({ result }: PaidResultProps) {
       </div>
 
       {/* Recommendations */}
-      <div className="bg-indigo-50 rounded-2xl border border-indigo-500/20 p-6">
+      <div className="bg-indigo-500/10 rounded-2xl border border-indigo-500/20 p-6">
         <h3 className="font-semibold text-white mb-4">Рекомендації для вашого типу</h3>
         <ul className="space-y-2">
           {result.recommendations.map((rec, i) => (
@@ -71,7 +71,7 @@ export default function PaidResult({ result }: PaidResultProps) {
           <div className="grid sm:grid-cols-3 gap-4">
             {upsellProducts.map((product) => (
               <div key={product.id} className="bg-white/5 border border-white/10 rounded-xl p-5 flex flex-col">
-                <div className="text-xs font-medium text-indigo-400 bg-indigo-50 px-2 py-0.5 rounded-full w-fit mb-3">
+                <div className="text-xs font-medium text-indigo-400 bg-indigo-500/10 px-2 py-0.5 rounded-full w-fit mb-3">
                   {product.tag}
                 </div>
                 <h4 className="font-medium text-white text-sm mb-1">{product.name}</h4>
