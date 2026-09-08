@@ -20,7 +20,7 @@ export default function Footer() {
               <li><Link href="/test" className="hover:text-white transition-colors">Безкоштовний тест</Link></li>
               <li><Link href="/offer?product=sleep_reason" className="hover:text-white transition-colors">Розбір типу (29 грн)</Link></li>
               <li><Link href="/offer?product=sleep_7_nights_recovery" className="hover:text-white transition-colors">7 ночей відновлення</Link></li>
-              <li><Link href="/course" className="hover:text-white transition-colors">Курс лікаря (590 грн)</Link></li>
+              <li><Link href="/course" className="hover:text-white transition-colors">Курс лікаря (249 грн)</Link></li>
             </ul>
           </div>
 

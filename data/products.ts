@@ -53,7 +53,7 @@ export const PRODUCTS: Record<string, Product> = {
     id: 'course',
     name: 'Курс лікаря: сон без таблеток',
     description: 'Повний відеокурс від лікаря-сомнолога. 8 модулів, 40+ відеоуроків, практичні техніки, особистий зворотній зв\'язок.',
-    price: 590,
+    price: 249,
     type: 'video',
     tag: 'Курс'
   }

@@ -5,7 +5,7 @@ Pages:
 - /result?type=TYPE&paid=true — Full paid result + upsell
 - /success — Post-payment page with content + upsell grid
 - /offer?product=ID — Generic product purchase page
-- /course — Doctor course (590 UAH) with module list
+- /course — Doctor course (249 UAH) with module list
 - /privacy, /terms, /contacts, /disclaimer — Legal pages
 
 API Stubs:
