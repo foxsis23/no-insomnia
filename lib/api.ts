@@ -38,6 +38,13 @@ export interface UpdateProductRequest {
   order?: number
 }
 
+export interface CreateManualOrderRequest {
+  productId: string
+  customerEmail: string
+  customerName?: string
+  customerPhone?: string
+}
+
 export interface CreateSessionResponse {
   sessionToken: string
   expiresAt: string
@@ -111,6 +118,16 @@ export async function deleteProduct(id: string, adminKey: string): Promise<void>
 
 export async function fetchOrders(adminKey: string): Promise<OrderStatus[]> {
   return apiClient.get<OrderStatus[]>('/payments/orders', {
+    headers: { 'x-admin-key': adminKey },
+  })
+}
+
+/** Оплата поза сайтом (готівка) — доступ відкривається одразу. */
+export async function createManualOrder(
+  adminKey: string,
+  data: CreateManualOrderRequest,
+): Promise<OrderStatus> {
+  return apiClient.post<OrderStatus>('/payments/orders/manual', data, {
     headers: { 'x-admin-key': adminKey },
   })
 }

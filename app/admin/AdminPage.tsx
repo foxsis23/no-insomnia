@@ -15,6 +15,7 @@ import {
   useProductsAdmin,
   useUpdateProduct,
   useDeleteProduct,
+  useCreateManualOrder,
 } from '@/lib/queries'
 
 function formatDate(iso: string) {
@@ -185,10 +186,115 @@ function StatCard({
   )
 }
 
+// Оплата готівкою: замовлення створюється одразу як оплачене, людина заходить
+// на /my за своєю поштою і бачить продукт.
+function ManualOrderForm({
+  adminKey,
+  products,
+}: {
+  adminKey: string
+  products: ApiProduct[]
+}) {
+  const active = products.filter((p) => p.isActive)
+  const [open, setOpen] = useState(false)
+  const [productId, setProductId] = useState('')
+  const [email, setEmail] = useState('')
+  const [name, setName] = useState('')
+  const createOrder = useCreateManualOrder(adminKey)
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    createOrder.mutate(
+      { productId, customerEmail: email.trim(), customerName: name.trim() || undefined },
+      {
+        onSuccess: () => {
+          toast.success(`Доступ відкрито: ${email.trim()}`)
+          setEmail('')
+          setName('')
+          setOpen(false)
+        },
+        onError: (err: Error) => toast.error(err.message || 'Не вдалося створити замовлення'),
+      },
+    )
+  }
+
+  if (!open) {
+    return (
+      <button
+        onClick={() => {
+          setProductId(active[0]?.id ?? '')
+          setOpen(true)
+        }}
+        disabled={!active.length}
+        className="self-start px-4 py-2 rounded-lg text-sm font-medium bg-indigo-500 hover:bg-indigo-400 disabled:opacity-40 text-white cursor-pointer transition-colors"
+      >
+        + Створити замовлення (готівка)
+      </button>
+    )
+  }
+
+  return (
+    <form
+      onSubmit={handleSubmit}
+      className="bg-white/5 border border-white/10 rounded-2xl p-5 flex flex-col gap-3"
+    >
+      <div className="text-white font-semibold">Оплата поза сайтом</div>
+      <p className="text-slate-400 text-sm">
+        Замовлення одразу отримає статус «оплачено». Людина заходить на /my за цією поштою
+        і бачить продукт.
+      </p>
+      <select
+        value={productId}
+        onChange={(e) => setProductId(e.target.value)}
+        className="bg-slate-900 border border-white/10 rounded-lg px-3 py-2 text-sm text-white"
+      >
+        {active.map((p) => (
+          <option key={p.id} value={p.id}>
+            {p.title} — {p.price} грн
+          </option>
+        ))}
+      </select>
+      <input
+        type="email"
+        required
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="Пошта покупця"
+        className="bg-slate-900 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder:text-slate-500"
+      />
+      <input
+        type="text"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        placeholder="Ім'я (необов'язково)"
+        className="bg-slate-900 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder:text-slate-500"
+      />
+      <div className="flex gap-2">
+        <button
+          type="submit"
+          disabled={createOrder.isPending || !email.trim() || !productId}
+          className="px-4 py-2 rounded-lg text-sm font-medium bg-indigo-500 hover:bg-indigo-400 disabled:opacity-40 text-white cursor-pointer transition-colors"
+        >
+          {createOrder.isPending ? 'Створюю…' : 'Відкрити доступ'}
+        </button>
+        <button
+          type="button"
+          onClick={() => setOpen(false)}
+          className="px-4 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 cursor-pointer transition-colors"
+        >
+          Скасувати
+        </button>
+      </div>
+    </form>
+  )
+}
+
 function OrdersTab({
+  adminKey,
   orders,
   products,
 }: {
+  adminKey: string
   orders: OrderStatus[]
   products: ApiProduct[]
 }) {
@@ -196,6 +302,7 @@ function OrdersTab({
 
   return (
     <div className="flex flex-col gap-4">
+      <ManualOrderForm adminKey={adminKey} products={products} />
       <span className="text-slate-400 text-sm">{orders.length} замовлень</span>
       <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden shadow-sm">
         {orders.length === 0 ? (
@@ -547,7 +654,7 @@ export default function AdminPage() {
           <>
             {activeTab === 'stats' && <StatsTab events={events} orders={orders} />}
             {activeTab === 'orders' && (
-              <OrdersTab orders={orders} products={products} />
+              <OrdersTab adminKey={adminKey} orders={orders} products={products} />
             )}
             {activeTab === 'products' && (
               <ProductsTab adminKey={adminKey} products={products} />

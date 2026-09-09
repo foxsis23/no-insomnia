@@ -12,7 +12,9 @@ import {
   fetchAnalyticsSummary,
   updateProduct,
   deleteProduct,
+  createManualOrder,
   type UpdateProductRequest,
+  type CreateManualOrderRequest,
 } from './api'
 
 export const qk = {
@@ -67,6 +69,17 @@ export function useUpdateProduct(adminKey: string) {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: qk.products })
       qc.invalidateQueries({ queryKey: qk.productsAdmin })
+    },
+  })
+}
+
+/** Готівкова оплата: створює оплачене замовлення руками з адмінки. */
+export function useCreateManualOrder(adminKey: string) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (data: CreateManualOrderRequest) => createManualOrder(adminKey, data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: qk.orders(adminKey) })
     },
   })
 }
