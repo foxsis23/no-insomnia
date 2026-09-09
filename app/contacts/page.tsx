@@ -42,9 +42,16 @@ export default function ContactsPage() {
             <div>
               <h2 className="font-semibold text-white mb-2">Реквізити</h2>
               <div className="text-slate-300 text-sm space-y-1">
-                <p>ФОП [Прізвище Ім'я По-батькові]</p>
-                <p>ЄДРПОУ: [код]</p>
-                <p>Україна</p>
+                <p>ТОВ «ФІНАНС-СЕРВІС»</p>
+                <p>ЄДРПОУ: 35380629</p>
+                <p>02100, м. Київ, вул. Георгія Тороповского, 14</p>
+                <p>Тел.: (095) 825-45-08</p>
+                <p>
+                  Пошта для юридичних питань:{' '}
+                  <a href="mailto:info@fins.com.ua" className="text-indigo-400 hover:text-indigo-400">
+                    info@fins.com.ua
+                  </a>
+                </p>
               </div>
             </div>
 

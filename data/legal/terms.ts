@@ -88,7 +88,7 @@ export const TERMS_BLOCKS: LegalBlock[] = [
   },
   {
     type: "li",
-    text: "Повний текст Політики конфіденційності розміщений за посиланням: https://www.безсоння.net/terms"
+    text: "Повний текст Політики конфіденційності розміщений за посиланням: https://www.безсоння.net/privacy"
   },
   {
     type: "p",
@@ -756,10 +756,6 @@ export const TERMS_BLOCKS: LegalBlock[] = [
   },
   {
     type: "li",
-    text: "Повне найменування:"
-  },
-  {
-    type: "li",
     text: "ТОВАРИСТВО З ОБМЕЖЕНОЮ ВІДПОВІДАЛЬНІСТЮ «ФІНАНС-СЕРВІС»"
   },
   {
@@ -768,19 +764,19 @@ export const TERMS_BLOCKS: LegalBlock[] = [
   },
   {
     type: "li",
-    text: "Юридична адреса:"
+    text: "Юридична адреса: 02100, м. Київ, вул. Георгія Тороповского, 14"
   },
   {
     type: "li",
-    text: "Електронна пошта для зв'язку:"
+    text: "Електронна пошта для зв'язку: info@fins.com.ua"
   },
   {
     type: "li",
-    text: "info@fins.com.ua"
+    text: "Телефон: (095) 825-45-08"
   },
   {
     type: "li",
-    text: "Сайт: https://www.тривога.net/"
+    text: "Сайт: https://www.безсоння.net/"
   },
   {
     type: "h2",
