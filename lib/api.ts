@@ -122,6 +122,17 @@ export async function fetchOrders(adminKey: string): Promise<OrderStatus[]> {
   })
 }
 
+/** Пошту збираємо на сайті, бот лише виставляє рахунок за цим кодом. */
+export async function createTelegramCheckout(
+  productId: string,
+  email: string,
+): Promise<{ code: string; botUrl: string }> {
+  return apiClient.post<{ code: string; botUrl: string }>('/telegram/checkout', {
+    productId,
+    email,
+  })
+}
+
 /** Оплата поза сайтом (готівка) — доступ відкривається одразу. */
 export async function createManualOrder(
   adminKey: string,
