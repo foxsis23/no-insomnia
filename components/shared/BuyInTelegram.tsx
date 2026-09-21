@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Send } from 'lucide-react'
-import { createTelegramCheckout } from '@/lib/api'
+import { createGratiaCheckout } from '@/lib/api'
 import { trackEvent } from '@/lib/analytics'
 
 interface Props {
@@ -24,11 +24,11 @@ export default function BuyInTelegram({ productId, price, label }: Props) {
     e.preventDefault()
     setLoading(true)
     setError('')
-    trackEvent('telegram_buy_click', { product_id: productId })
+    trackEvent('gratia_buy_click', { product_id: productId })
 
     try {
-      const { botUrl } = await createTelegramCheckout(productId, email.trim())
-      window.location.href = botUrl
+      const { checkoutUrl } = await createGratiaCheckout(productId, email.trim())
+      window.location.href = checkoutUrl
     } catch {
       setError('Не вдалося створити замовлення. Спробуйте ще раз.')
       setLoading(false)

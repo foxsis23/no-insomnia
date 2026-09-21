@@ -130,15 +130,36 @@ export async function fetchOrders(adminKey: string): Promise<OrderStatus[]> {
   })
 }
 
-/** Пошту збираємо на сайті, бот лише виставляє рахунок за цим кодом. */
-export async function createTelegramCheckout(
+/**
+ * Оплата через GratiA: пошту збираємо тут, далі людина йде в бот оплачувати.
+ * Повертає посилання на рахунок у боті.
+ */
+export async function createGratiaCheckout(
   productId: string,
   email: string,
-): Promise<{ code: string; botUrl: string }> {
-  return apiClient.post<{ code: string; botUrl: string }>('/telegram/checkout', {
+): Promise<{ orderId: string; checkoutUrl: string }> {
+  return apiClient.post<{ orderId: string; checkoutUrl: string }>('/payments/gratia/create', {
     productId,
-    email,
+    customerEmail: email,
   })
+}
+
+/** Повернення з бота: підписане посилання обмінюємо на сесію. */
+export async function createGratiaSession(
+  payment: string,
+  ts: string,
+  sig: string,
+): Promise<CreateSessionResponse> {
+  const data = await apiClient.post<{
+    session_token: string
+    expires_at: string
+    productIds: string[]
+  }>('/payments/gratia/session', { payment, ts, sig })
+  return {
+    sessionToken: data.session_token,
+    expiresAt: data.expires_at,
+    productIds: data.productIds ?? [],
+  }
 }
 
 /** Оплата поза сайтом (готівка) — доступ відкривається одразу. */

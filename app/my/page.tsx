@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { FileText } from 'lucide-react'
 import Header from '@/components/shared/Header'
-import { createSession, fetchMe, requestLoginCode } from '@/lib/api'
+import { createSession, fetchMe, requestLoginCode, createGratiaSession } from '@/lib/api'
 import { useProducts } from '@/lib/queries'
 import { useSessionStore, isSessionValid } from '@/lib/sessionStore'
 
@@ -24,7 +24,34 @@ export default function MyPage() {
   const [step, setStep] = useState<'email' | 'code'>('email')
   const [code, setCode] = useState('')
 
-  // Перехід із бота: ?token=… — вхід без пошти, посилання вже підтверджує оплату.
+  // Повернення з бота GratiA: ?gratia_payment=…&gratia_ts=…&gratia_sig=…
+  // Підпис уже підтверджує оплату, тому пошту й код не питаємо.
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search)
+    const payment = q.get('gratia_payment')
+    const ts = q.get('gratia_ts')
+    const sig = q.get('gratia_sig')
+    if (!payment || !ts || !sig) return
+
+    let cancelled = false
+    createGratiaSession(payment, ts, sig)
+      .then((session) => {
+        if (cancelled) return
+        setSession(session.sessionToken, session.expiresAt, session.productIds)
+        setSearched(true)
+      })
+      .catch(() => {
+        if (!cancelled) setError('Посилання застаріло. Увійдіть за поштою, яку вказували при оплаті.')
+      })
+      .finally(() => {
+        if (!cancelled) window.history.replaceState(null, '', '/my')
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [setSession])
+
+  // Старе посилання з попереднього бота: ?token=… — теж пускаємо без пошти.
   useEffect(() => {
     const token = new URLSearchParams(window.location.search).get('token')
     if (!token) return
