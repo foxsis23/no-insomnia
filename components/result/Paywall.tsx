@@ -1,11 +1,9 @@
 'use client'
 
-import { useState } from 'react'
 import { Check } from 'lucide-react'
 import { ResultType } from '@/types'
-import { createOrder } from '@/lib/stubs'
-import { trackEvent } from '@/lib/analytics'
 import { useProducts } from '@/lib/queries'
+import BuyInTelegram from '@/components/shared/BuyInTelegram'
 
 interface PaywallProps {
   resultType: ResultType
@@ -16,48 +14,6 @@ export default function Paywall({ resultType }: PaywallProps) {
   const price = Number(
     products?.find((p) => p.id === 'sleep_reason')?.price ?? 29,
   )
-  const [email, setEmail] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState('')
-
-  async function handlePurchase() {
-    setIsLoading(true)
-    setError('')
-    trackEvent('paywall_click', { result_type: resultType })
-
-    try {
-      const order = await createOrder({ productId: 'sleep_reason', email: email || undefined, resultType })
-
-      const form = document.createElement('form')
-      form.method = 'POST'
-      form.action = order.paymentUrl
-
-      Object.entries(order.formData).forEach(([key, value]) => {
-        if (Array.isArray(value)) {
-          value.forEach((v) => {
-            const input = document.createElement('input')
-            input.type = 'hidden'
-            input.name = key
-            input.value = v
-            form.appendChild(input)
-          })
-        } else {
-          const input = document.createElement('input')
-          input.type = 'hidden'
-          input.name = key
-          input.value = String(value)
-          form.appendChild(input)
-        }
-      })
-
-      document.body.appendChild(form)
-      form.submit()
-    } catch {
-      setError('Виникла помилка. Спробуйте ще раз.')
-      setIsLoading(false)
-    }
-  }
-
   return (
     <div className="bg-gradient-to-br from-indigo-950/40 to-slate-950 rounded-2xl border border-indigo-500/20 p-8 mt-6">
       <h2 className="text-xl font-bold text-white mb-2">Повний розбір вашого типу</h2>
@@ -80,29 +36,12 @@ export default function Paywall({ resultType }: PaywallProps) {
         ))}
       </ul>
 
-      <div className="mb-4">
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email (необов'язково) — отримати на пошту"
-          className="w-full border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-transparent"
-        />
-      </div>
+      <BuyInTelegram
+        productId="sleep_reason"
+        price={price}
+        label={`Отримати повний розбір — ${price} грн`}
+      />
 
-      {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
-
-      <button
-        onClick={handlePurchase}
-        disabled={isLoading}
-        className="w-full bg-indigo-500 hover:bg-indigo-400 disabled:opacity-60 text-white font-semibold py-4 rounded-xl transition-colors text-lg"
-      >
-        {isLoading ? 'Зачекайте…' : `Отримати повний розбір — ${price} грн`}
-      </button>
-
-      <p className="text-center text-xs text-slate-500 mt-3">
-        Безпечна оплата через WayForPay. Миттєвий доступ після оплати.
-      </p>
     </div>
   )
 }

@@ -1,10 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { FileText } from 'lucide-react'
 import Header from '@/components/shared/Header'
-import { createSession } from '@/lib/api'
+import { createSession, fetchMe } from '@/lib/api'
 import { useProducts } from '@/lib/queries'
 import { useSessionStore, isSessionValid } from '@/lib/sessionStore'
 
@@ -20,6 +20,33 @@ export default function MyPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [searched, setSearched] = useState(false)
+
+  // Перехід із бота: ?token=… — вхід без пошти, посилання вже підтверджує оплату.
+  useEffect(() => {
+    const token = new URLSearchParams(window.location.search).get('token')
+    if (!token) return
+
+    let cancelled = false
+    fetchMe(token)
+      .then((ids) => {
+        if (cancelled) return
+        const month = new Date()
+        month.setDate(month.getDate() + 30)
+        setSession(token, month.toISOString(), ids)
+        setSearched(true)
+      })
+      .catch(() => {
+        if (!cancelled) setError('Посилання застаріло. Введіть пошту, яку вказували при оплаті.')
+      })
+      .finally(() => {
+        if (!cancelled) {
+          window.history.replaceState(null, '', '/my')
+        }
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [setSession])
 
   const hasValidSession = isSessionValid(sessionToken, sessionExpiresAt)
   const purchased = products.filter((p) => purchasedProductIds.includes(p.id))
