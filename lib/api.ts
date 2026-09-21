@@ -78,12 +78,20 @@ export async function trackAnalyticsEvent(
 
 // ── Auth ──────────────────────────────────────────────────────────────────────
 
-export async function createSession(email: string): Promise<CreateSessionResponse> {
+/** Просимо надіслати код входу на пошту. Відповідь однакова, є покупки чи ні. */
+export async function requestLoginCode(email: string): Promise<void> {
+  await apiClient.post('/auth/request-code', { email })
+}
+
+export async function createSession(
+  email: string,
+  code?: string,
+): Promise<CreateSessionResponse> {
   const data = await apiClient.post<{
     session_token: string
     expires_at: string
     productIds: string[]
-  }>('/auth/session', { email })
+  }>('/auth/session', { email, ...(code ? { code } : {}) })
   return {
     sessionToken: data.session_token,
     expiresAt: data.expires_at,
